@@ -4,26 +4,20 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/google/uuid"
 )
 
-var database = []Peep{}
-var peep = newPeep("Hello, World!", "14/09/2022", "Chris")
+var database = Database{}
+var peep = newPeep("Hello, World!", "14/09/2022", "Chris", uuid.New().String())
 
 func main() {
 
 	database = append(database, peep)
 	router := chi.NewRouter()
 
-	router.Get("/all", GetAll)
+	router.Get("/all", database.get)
 
 	http.ListenAndServe(":8080", router)
-}
-
-func GetAll(w http.ResponseWriter, r *http.Request) {
-
-	for _, p := range database {
-		w.Write([]byte(p.get()))
-	}
 }
 
 /**
